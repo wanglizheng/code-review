@@ -1,0 +1,10 @@
+
+spring:
+  application:
+    name: ihealth-discovery
+
+  cloud:
+    config:
+      uri: ${CONFIG_URL} 
+      username: ${CONFIG_USER} 
+      password: ${CONFIG_PASSWORD} 

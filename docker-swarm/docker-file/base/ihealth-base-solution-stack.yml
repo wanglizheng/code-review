@@ -1,0 +1,51 @@
+version: '3.3'
+
+services:
+  ihealth-config:
+    image: 10.10.9.26:5000/ihealth-config:1.0.0.RELEASE
+    ports:
+      - "8889:8889"
+    networks:
+      - overlay1
+    environment:
+      GITLAB_URI: http://git.inspur.com/inspur_health/commons/ihealth-config-test.git
+      GITLAB_USERNAME: hmu
+      GITLAB_PASSWORD: 123456a?
+      SECURITY_NAME: admin
+      SECURITY_PASSWORD: 123456a
+      ZONE: zone1
+      EUREKA_URL: http://172.22.19.158:8761/eureka
+
+
+
+  ihealth-discovery:
+    image: 10.10.9.26:5000/ihealth-discovery:1.0.0.RELEASE
+    ports:
+      - "8761:8761"
+    depends_on:
+      - ihealth-config
+    networks:
+      - overlay1
+    environment:
+      CONFIG_URL: http://172.22.19.158:8889
+      CONFIG_USER: admin
+      CONFIG_PASSWORD: 123456a
+      
+  ihealth-gateway:
+    image: 10.10.9.26:5000/ihealth-gateway:1.0.0.RELEASE
+    ports:
+      - "8866:8866"
+    depends_on:
+      - ihealth-config
+      - ihealth-discovery
+    networks:
+      - overlay1
+    environment:
+      CONFIG_URL: http://172.22.19.158:8889
+      CONFIG_USER: admin
+      CONFIG_PASSWORD: 123456a
+
+
+networks:
+  overlay1:
+    external: true

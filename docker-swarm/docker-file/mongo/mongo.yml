@@ -1,0 +1,208 @@
+version: '3.3'
+services:
+
+  mongors1n1:
+    # docker 浪潮私有仓库地址
+    image: hmu-docker-local.repo.inspur.com/mongo
+    command: mongod --shardsvr --replSet shard1 --dbpath /data/db --port 27017
+    networks:
+      - overlay1
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /root/mongo/shard1:/data/db
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+      placement:
+        # 指定在服务器 manager 上启动
+        constraints: [node.hostname == Icloud_159]
+
+  mongors2n1:
+    image: hmu-docker-local.repo.inspur.com/mongo
+    command: mongod --shardsvr --replSet shard2 --dbpath /data/db --port 27017
+    networks:
+      - overlay1
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /root/mongo/shard2:/data/db
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+      placement:
+        constraints: [node.hostname == Icloud_159]
+
+  mongors3n1:
+    image: hmu-docker-local.repo.inspur.com/mongo
+    command: mongod --shardsvr --replSet shard3 --dbpath /data/db --port 27017
+    networks:
+      - overlay1
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /root/mongo/shard3:/data/db
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+      placement:
+        constraints: [node.hostname == icloud_158]
+
+  mongors1n2:
+    image: hmu-docker-local.repo.inspur.com/mongo
+    command: mongod --shardsvr --replSet shard1 --dbpath /data/db --port 27017
+    networks:
+      - overlay1
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /root/mongo/shard1:/data/db
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+      placement:
+        constraints: [node.hostname == icloud_158]
+
+  mongors2n2:
+    image: hmu-docker-local.repo.inspur.com/mongo
+    command: mongod --shardsvr --replSet shard2 --dbpath /data/db --port 27017
+    networks:
+      - overlay1
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /root/mongo/shard2:/data/db
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+      placement:
+        constraints: [node.hostname == Icloud_160]
+
+  mongors3n2:
+    image: hmu-docker-local.repo.inspur.com/mongo
+    command: mongod --shardsvr --replSet shard3 --dbpath /data/db --port 27017
+    networks:
+      - overlay1
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /root/mongo/shard3:/data/db
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+      placement:
+        constraints: [node.hostname == Icloud_160]
+
+  mongors1n3:
+    image: hmu-docker-local.repo.inspur.com/mongo
+    command: mongod --shardsvr --replSet shard1 --dbpath /data/db --port 27017
+    networks:
+      - overlay1
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /root/mongo/shard1:/data/db
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+      placement:
+        constraints: [node.hostname == Icloud_160]
+
+  mongors2n3:
+    image: hmu-docker-local.repo.inspur.com/mongo
+    command: mongod --shardsvr --replSet shard2 --dbpath /data/db --port 27017
+    networks:
+      - overlay1
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /root/mongo/shard2:/data/db
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+      placement:
+        constraints: [node.hostname == icloud_158]
+
+  mongors3n3:
+    image: hmu-docker-local.repo.inspur.com/mongo
+    command: mongod --shardsvr --replSet shard3 --dbpath /data/db --port 27017
+    networks:
+      - overlay1
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /root/mongo/shard3:/data/db
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+      placement:
+        constraints: [node.hostname == Icloud_159]
+
+  cfg1:
+    image: hmu-docker-local.repo.inspur.com/mongo
+    command: mongod --configsvr --replSet cfgrs --dbpath /data/db --port 27017
+    networks:
+      - overlay1
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /root/mongo/config:/data/db
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+      placement:
+        constraints: [node.hostname == Icloud_160]
+
+  cfg2:
+    image: hmu-docker-local.repo.inspur.com/mongo
+    command: mongod --configsvr --replSet cfgrs --dbpath /data/db --port 27017
+    networks:
+      - overlay1
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /root/mongo/config:/data/db
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+      placement:
+        constraints: [node.hostname == Icloud_159]
+
+  cfg3:
+    image: hmu-docker-local.repo.inspur.com/mongo
+    command: mongod --configsvr --replSet cfgrs --dbpath /data/db --port 27017
+    networks:
+      - overlay1
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /root/mongo/config:/data/db
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+      placement:
+        constraints: [node.hostname == icloud_158]
+
+  mongos:
+    image: hmu-docker-local.repo.inspur.com/mongo
+    # mongo  版默认绑定IP为 127.0.0.1，此处绑定 0.0.0.0 是允许其他容器或主机可以访问
+    command: mongos --configdb cfgrs/cfg1:27017,cfg2:27017,cfg3:27017 --bind_ip 0.0.0.0 --port 27017
+    networks:
+      - overlay1
+    # 映射宿主机的 27017 端口
+    ports:
+      - 27017:27017
+    volumes:
+      - /etc/localtime:/etc/localtime
+    depends_on:
+      - cfg1
+      - cfg2
+      - cfg3
+    deploy:
+      restart_policy:
+        condition: on-failure
+      # 在集群内的每一台服务器上都启动一个容器
+      mode: global
+networks:
+  overlay1:
+    external: true

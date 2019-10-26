@@ -1,0 +1,26 @@
+
+spring:
+  application:
+    name: ihealth-config
+  cloud:
+    config:
+      server:
+        git:
+          uri: ${GITLAB_URI}
+          username: ${GITLAB_USERNAME}
+          password: ${GITLAB_PASSWORD}
+  security:
+    user:
+      name: ${SECURITY_NAME}
+      password: ${SECURITY_PASSWORD}
+server:
+  port: ${PORT:8889}
+eureka:
+  instance:
+    metadataMap:
+      zone: ${ZONE}
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL}
+
+

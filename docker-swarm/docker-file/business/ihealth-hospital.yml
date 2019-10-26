@@ -1,0 +1,31 @@
+version: '3.3'
+
+services:
+  ihealth-hospital-server:
+    image: 10.10.9.26:5000/ihealth-hospital-server:1.0.0.RELEASE
+    ports:
+      - "29999:29999"
+    networks:
+      - overlay1
+    environment:
+      CONFIG_URL: http://172.22.19.158:8889
+      CONFIG_USER: admin
+      CONFIG_PASSWORD: 123456a
+
+  ihealth-hospital-rest:
+    image: 10.10.9.26:5000/ihealth-hospital-rest:1.0.0.RELEASE
+    ports:
+      - "19090:19090"
+    depends_on:
+      - ihealth-hospital-server
+    networks:
+      - overlay1
+    environment:
+      CONFIG_URL: http://172.22.19.158:8889
+      CONFIG_USER: admin
+      CONFIG_PASSWORD: 123456a
+
+
+networks:
+  overlay1:
+    external: true
