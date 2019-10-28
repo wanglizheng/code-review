@@ -1,0 +1,70 @@
+version: '3.6'
+
+services:
+  kafka1:
+    image: hmu-docker-local.repo.inspur.com/wurstmeister/kafka
+    hostname: kafka1
+    volumes:
+      - /root/kafka/logs:/kafka/kafka-logs-kafka2
+      - /etc/localtime:/etc/localtime
+    networks:
+      - overlay1
+    deploy:
+      replicas: 1
+      endpoint_mode: vip
+      placement:
+        constraints: [node.hostname == Icloud_159]
+    environment:
+      KAFKA_HEAP_OPTS: -Xmx1G -Xms1G
+      KAFKA_ADVERTISED_HOST_NAME: kafka1
+      KAFKA_ZOOKEEPER_CONNECT: "zoo1:2181,zoo2:2181,zoo3:2181"
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+
+  kafka2:
+    image: hmu-docker-local.repo.inspur.com/wurstmeister/kafka
+    hostname: kafka2
+    volumes:
+      - /root/kafka/logs:/kafka/kafka-logs-kafka2
+      - /etc/localtime:/etc/localtime
+    networks:
+      - overlay1
+    deploy:
+      replicas: 1
+      endpoint_mode: vip
+      placement:
+        constraints: [node.hostname == Icloud_158]
+    environment:
+      KAFKA_HEAP_OPTS: -Xmx1G -Xms1G
+      KAFKA_ADVERTISED_HOST_NAME: kafka2
+      KAFKA_ZOOKEEPER_CONNECT: "zoo1:2181,zoo2:2181,zoo3:2181"
+      KAFKA_BROKER_ID: 2
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+
+  kafka3:
+    image: hmu-docker-local.repo.inspur.com/wurstmeister/kafka
+    hostname: kafka3
+    volumes:
+      - /root/kafka/logs:/kafka/kafka-logs-kafka2
+      - /etc/localtime:/etc/localtime
+    networks:
+      - overlay1
+    deploy:
+      replicas: 1
+      endpoint_mode: vip
+      placement:
+        constraints: [node.hostname == Icloud_160]
+    environment:
+      KAFKA_HEAP_OPTS: -Xmx1G -Xms1G
+      KAFKA_ADVERTISED_HOST_NAME: kafka3
+      KAFKA_ZOOKEEPER_CONNECT: "zoo1:2181,zoo2:2181,zoo3:2181"
+      KAFKA_BROKER_ID: 3
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+
+networks:
+  overlay1:
+    external: true
+    name: overlay1

@@ -1,0 +1,54 @@
+version: '3.7'
+services:
+  redis1:
+    image: registry.cn-beijing.aliyuncs.com/rj-bai/redis:cluster-5.0.3
+    hostname: redis1
+    deploy:
+      replicas: 1
+      endpoint_mode: vip
+      placement:
+        constraints: [node.hostname == Icloud_159]
+    environment:
+      DIR: /data/7000
+      REDIS_PORT: 7000
+    volumes:
+      - /root/redis/data:/data/7000
+    networks:
+      - overlay1
+
+  redis2:
+    image: registry.cn-beijing.aliyuncs.com/rj-bai/redis:cluster-5.0.3
+    hostname: redis2
+    deploy:
+      replicas: 1
+      endpoint_mode: vip
+      placement:
+        constraints: [node.hostname == Icloud_158]
+    environment:
+      DIR: /data/7001
+      REDIS_PORT: 7001
+    volumes:
+      - /root/redis/data:/data/7001
+    networks:
+      - overlay1
+
+  redis3:
+    image: registry.cn-beijing.aliyuncs.com/rj-bai/redis:cluster-5.0.3
+    hostname: redis3
+    deploy:
+      replicas: 1
+      endpoint_mode: vip
+      placement:
+        constraints: [node.hostname == Icloud_160]
+    environment:
+      DIR: /data/7002
+      REDIS_PORT: 7002
+    volumes:
+      - /root/redis/data:/data/7002
+    networks:
+      - overlay1
+
+networks:
+  overlay1:
+    external: true
+    name: overlay1

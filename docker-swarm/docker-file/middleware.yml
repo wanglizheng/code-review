@@ -1,0 +1,51 @@
+version: '3.1'
+services:
+  my_mariadb:
+    image: hmu-docker-local.repo.inspur.com/mariadb
+    restart: always
+    volumes:
+      - my_mariadb_conf:/etc/mysql/mysql.conf.d
+    ports:
+      - "13306:3306"
+    networks:
+      - overlay1
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+
+  my_slave_mariadb:
+    image: hmu-docker-local.repo.inspur.com/mariadb
+    restart: always
+    volumes:
+      - my_slave_mariadb_conf:/etc/mysql/mysql.conf.d
+    ports:
+      - "13307:3306"
+    networks:
+      - overlay1
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+
+  my_redis:
+    image: hmu-docker-local.repo.inspur.com/redis:4
+    expose:
+      - 6379
+    command:
+      redis-server
+    networks:
+      - overlay1
+
+
+volumes:
+  my_mariadb_conf:
+    external: true
+  my_slave_mariadb_conf:
+    external: true
+
+networks:
+  overlay1:
+    external: true

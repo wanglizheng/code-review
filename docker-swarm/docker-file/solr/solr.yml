@@ -1,0 +1,70 @@
+version: '3.6'
+
+services:
+  solr1:
+    image: hmu-docker-local.repo.inspur.com/solr
+    hostname: solr1
+    ports:
+      - "8983:8983"
+    networks:
+      - overlay1
+    deploy:
+      replicas: 1
+      endpoint_mode: vip
+      placement:
+        constraints: [node.hostname == Icloud_159]
+    environment:
+      ZK_HOST: zoo1:2181,zoo2:2181,zoo3:2181
+    depends_on:
+      - zoo1
+      - zoo2
+      - zoo3
+    restart: always
+    container_name: solr1
+
+  solr2:
+    image: hmu-docker-local.repo.inspur.com/solr
+    hostname: solr2
+    ports:
+      - "8984:8983"
+    networks:
+      - overlay1
+    deploy:
+      replicas: 1
+      endpoint_mode: vip
+      placement:
+        constraints: [node.hostname == Icloud_158]
+    environment:
+      ZK_HOST: zoo1:2181,zoo2:2181,zoo3:2181
+    depends_on:
+      - zoo1
+      - zoo2
+      - zoo3
+    restart: always
+    container_name: solr2
+
+  solr3:
+    image: hmu-docker-local.repo.inspur.com/solr
+    hostname: solr3
+    ports:
+      - "8985:8983"
+    networks:
+      - overlay1
+    deploy:
+      replicas: 1
+      endpoint_mode: vip
+      placement:
+        constraints: [node.hostname == Icloud_160]
+    environment:
+      ZK_HOST: zoo1:2181,zoo2:2181,zoo3:2181
+    depends_on:
+      - zoo1
+      - zoo2
+      - zoo3
+    restart: always
+    container_name: solr3
+
+networks:
+  overlay1:
+    external: true
+    name: overlay1

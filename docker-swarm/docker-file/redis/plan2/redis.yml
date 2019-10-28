@@ -1,0 +1,49 @@
+version: '3.7'
+
+services:
+  redis-master:
+    image: hmu-docker-local.repo.inspur.com/redis:4
+    volumes:
+      - /root/redis/data:/data
+      - /root/redis/conf/redis.conf:/etc/redis.conf
+    command: redis-server /etc/redis.conf
+    ports:
+      - 6379:6379
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.hostname == Icloud_159]
+    networks:
+      - overlay1
+  redis-slave:
+    image: hmu-docker-local.repo.inspur.com/redis:4
+    volumes:
+      - /root/redis/data:/data
+      - /root/redis/conf/redis.conf:/etc/redis.conf
+    command: redis-server /etc/redis.conf --slaveof redis-master 6379
+    deploy:
+      mode: replicated
+      replicas: 2
+      placement:
+        constraints: [node.hostname == Icloud_160]
+    networks:
+      - overlay1
+  sentinel:
+    image: bladex/sentinel-dashboard
+    volumes:
+      - /root/redis/conf/sentinel.conf:/etc/redis.conf
+    command: redis-sentinel /etc/sentinel.conf
+    deploy:
+      mode: replicated
+      replicas: 3
+    ports:
+      - 26379:26379
+    depends_on:
+      - redis-master
+    networks:
+      - overlay1
+networks:
+  overlay1:
+    external:
+      name: overlay1
