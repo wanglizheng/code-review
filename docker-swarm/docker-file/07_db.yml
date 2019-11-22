@@ -1,0 +1,104 @@
+version: '3.1'
+services:
+  my_mariadb:
+    image: hmu-docker-local.repo.inspur.com/mariadb
+    restart: always
+    volumes:
+      - my_mariadb_conf:/etc/mysql/mysql.conf.d
+    ports:
+      - "13306:3306"
+    networks:
+      - overlay1
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+
+
+
+  my_slave_mariadb:
+    image: hmu-docker-local.repo.inspur.com/mariadb
+    restart: always
+    volumes:
+      - my_slave_mariadb_conf:/etc/mysql/mysql.conf.d
+    ports:
+      - "13307:3306"
+    networks:
+      - overlay1
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+
+
+  zookeeper:
+    image: hmu-docker-local.repo.inspur.com/wurstmeister/zookeeper
+    restart: unless-stopped
+    hostname: zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - overlay1
+
+  kafka:
+    image: hmu-docker-local.repo.inspur.com/wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: 172.22.19.158
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    depends_on:
+      - zookeeper
+    networks:
+      - overlay1
+
+  my_mongo:
+    image: hmu-docker-local.repo.inspur.com/mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    networks:
+      - overlay1
+
+  my_solr:
+    image: hmu-docker-local.repo.inspur.com/solr
+    ports:
+      - "8983:8983"
+    volumes:
+      - my_solr_data:/opt/solr/server/solr/mycores
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr-precreate
+      - mycore
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - overlay1
+
+  my_redis:
+    image: hmu-docker-local.repo.inspur.com/redis:4
+    expose:
+      - 6379
+    command:
+      redis-server
+    networks:
+      - overlay1
+
+
+
+volumes:
+  my_mariadb_conf:
+    external: true
+  my_slave_mariadb_conf:
+    external: true
+  my_solr_data:
+    external: true
+networks:
+  overlay1:
+    external: true

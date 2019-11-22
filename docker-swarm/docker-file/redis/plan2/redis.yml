@@ -13,7 +13,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: [node.hostname == Icloud_159]
+        constraints: [node.role == manager]
     networks:
       - overlay1
   redis-slave:
@@ -22,6 +22,8 @@ services:
       - /root/redis/data:/data
       - /root/redis/conf/redis.conf:/etc/redis.conf
     command: redis-server /etc/redis.conf --slaveof redis-master 6379
+    depends_on:
+      - redis-master
     deploy:
       mode: replicated
       replicas: 2
@@ -30,9 +32,9 @@ services:
     networks:
       - overlay1
   sentinel:
-    image: bladex/sentinel-dashboard
+    image: lgatica/redis-sentinel    //主节点挂掉，暂未切换。
     volumes:
-      - /root/redis/conf/sentinel.conf:/etc/redis.conf
+      - /root/redis/conf/sentinel.conf:/etc/sentinel.conf
     command: redis-sentinel /etc/sentinel.conf
     deploy:
       mode: replicated

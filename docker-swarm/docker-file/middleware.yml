@@ -30,16 +30,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: example
 
-  my_redis:
-    image: hmu-docker-local.repo.inspur.com/redis:4
-    expose:
-      - 6379
-    command:
-      redis-server
-    networks:
-      - overlay1
-
-
 volumes:
   my_mariadb_conf:
     external: true
