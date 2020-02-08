@@ -18,4 +18,5 @@ docker node inspect icloud_158 --pretty
 查看服务的具体信息
 ````
 # docker service ps mongo_cfg1
+ docker service ps zookeeper_zoo1  
 ````

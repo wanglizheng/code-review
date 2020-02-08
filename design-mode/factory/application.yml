@@ -1,0 +1,25 @@
+
+#JPush验证
+jpush:
+  conf[0]:
+    name: user
+    key: 4d1ed082a4de3be1628b2b60
+    secret: db1053aa289172ec69a7ece3
+    production: false
+  conf[1]:
+    name: doctor
+    key: 2dd4ec349bc6958e9372353f
+    secret: 11c4f7ab3f028d7b89b61bc3
+  conf[2]:
+    name: neimeng
+    key: 563a0bda04ff3cfb3d178235
+    secret: c9008493a4fb8a6cfb733a5b
+    production: true
+url:
+  sso: http://10.10.9.10:8031
+  auth: http://10.10.9.10:8032
+
+server:
+  port: 8091
+  servlet:
+    context-path: /jpush_service

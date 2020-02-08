@@ -33,7 +33,7 @@ public class EsStreamListener {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            //log.info(sdf.format(new Date())+"------end--------");
+            //log.info(sdf.format(new date())+"------end--------");
 
             acknowledgment.acknowledge(); //消费结束，告知kafka消息已收到，调整消息的偏移量。
         }
