@@ -6,6 +6,12 @@ server:
 spring:
   application:
     name: oil
+  redis:
+    host: 10.10.9.9
+    port: 52892
+    password: EES4Tnn3ISwKCtRrXf3TAufb9uN6VkQI
+    timeout: 20000
+    database: 2
   data:
     mongodb:
       uri: mongodb://oil:SDmcc7890@120.27.112.4:27017/oil?authSource=oil
@@ -15,12 +21,11 @@ spring:
       kafka:
         binder:
           brokers: 10.10.9.40:9092
-
         bindings:
           es_default_input:
             consumer:
               autoCommitOffset: false   #关闭偏移量自动提交，代码自动acknowledge.
-#缺省的输入、输出通道
+      #缺省的输入、输出通道
       bindings:
         es_default_input:                # channel 通道
           destination: inspur-ihealth  # topic 主题

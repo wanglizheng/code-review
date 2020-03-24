@@ -31,8 +31,9 @@ public class DateTests {
 
         SimpleDateFormat format0 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:S");
         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
-        String time0 = format0.format(System.currentTimeMillis());
+        String time0 = format0.format(1580381719);
         String time1 = format1.format(System.currentTimeMillis());
+
         log.info("发送时间:  " + time0);
         log.info("发送时间:  " + time1);
 
